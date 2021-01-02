@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>let img = [
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQnynC49QVmuOD7ca5RJXkYgPX527Rxln0S1w&usqp=CAU",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdK59rQfs-ePAkVajj1Xwque_thRNA-rOoZA&usqp=CAU",
+      "https://static.independent.co.uk/2020/12/24/13/newFile-4.jpg?width=375",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkpNKrYU_ylcux9vrkz5mXM8-7Fu_IzFb-hg&usqp=CAU",
+      "https://upload.wikimedia.org/wikipedia/commons/f/f0/Mops_oct09_cropped2.jpg"
+    ];
+    let newImg = [];
+    let tempImg = [];
+    
+    function getRandomImage() {
+      tempImg = img;
+      newImg = img;
+      for (let k = 0; k < 5; k += 1) {
+        const num1 = getRndInteger(0, tempImg.length - 1);
+        newImg.push(tempImg[num1]);
+        tempImg.splice(num1, 1);
+      }
+    
+      let num = getRndInteger(0, 4);
+      newImg.push(newImg[num]);
+    
+      const id = document.getElementById("id");
+      let map = new Map();
+      for (let i = 0; i < 6; i += 1) {
+        const num1 = getRndInteger(0, newImg.length - 1);
+        const im = document.createElement("img");
+        if (map.has(newImg[num1]) === true) {
+          im.setAttribute("class", "img" + map.get(newImg[num1]));
+          im.setAttribute("id", i + 1);
+          im.setAttribute("src", newImg[num1]);
+          im.setAttribute("alt", "tom");
+          im.setAttribute("height", "150px");
+          im.setAttribute("width", "150px");
+          im.setAttribute("onclick", "fun2(event)");
+          id.appendChild(im);
+        } else {
+          im.setAttribute("class", "img" + (i + 1));
+          im.setAttribute("id", i + 1);
+          im.setAttribute("src", newImg[num1]);
+          im.setAttribute("alt", "tom");
+          im.setAttribute("height", "150px");
+          im.setAttribute("width", "150px");
+          im.setAttribute("onclick", "fun2(event)");
+          id.appendChild(im);
+          map.set(newImg[num1], i + 1);
+        }
+        newImg.splice(num1, 1);
+      }
+    }
+    // document.getElementById("btn").innerHTML = "Verify";
+    function getRndInteger(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    let clicks = 0;
+    let map2 = new Map();
+    function fun2(e) {
+      if (map2.has(e.target.id) === false) {
+        map2.set(e.target.id, e.target.className);
+        document.getElementById(e.target.id).style.borderColor = "blue";
+      }
+      if (map2.size > 0) {
+        document.getElementById("reset").style.visibility = "visible";
+      }
+      if (map2.size == 2) {
+        document.getElementById("btn").style.visibility = "visible";
+      } else {
+        document.getElementById("btn").style.visibility = "hidden";
+      }
+    }
+    function reset() {
+      map2.clear();
+      for (let i = 1; i <= 6; i++) {
+        document.getElementById(i).style.borderColor = "grey";
+      }
+      document.getElementById("reset").style.visibility = "hidden";
+    }
+    function verify() {
+      let flag = true;
+      let arr3 = [];
+    
+      map2.forEach(function (value, key) {
+        arr3.push(value);
+      });
+     // console.log(arr3);
+      if (arr3[0] == arr3[1]) {
+        const element = document.createElement("p");
+        element.setAttribute("id", "para");
+    
+        element.innerText = "You are a human. Congratulations!";
+        document.body.appendChild(element);
+      } else {
+        const element = document.createElement("p");
+        element.setAttribute("id", "para");
+        element.innerText =
+          "We can't verify you as a human. You selected the non-identical tiles.";
+        document.body.appendChild(element);
+      }
+      reset();
+      document.getElementById("btn").style.visibility = "hidden";
+     // getRandomImage();
+    }
+    </script>
+    <style>
+      img {
+        border: 2px solid grey;
+      }
+      #reset {
+        visibility: hidden;
+      }
+      #btn {
+        visibility: hidden;
+      }
+    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Human Verification</title>
+  </head>
+  <body onload="getRandomImage()">
+    <div id="id"></div>
+    <h3 id="delete">
+      Please click on the identical tiles to verify that you are not a robot
+    </h3>
+    <button id="reset" onclick="reset()">reset</button>
+    <button id="btn" onclick="verify()">Verify</button>
+  </body>
+</html>
